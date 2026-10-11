@@ -1,9 +1,8 @@
-e: float     = 2,71828182845905
-pi: float    = 3.14159265358979
-tau: float   = 6.28318530717959
-phi: float   = 1.61803398874989
-phi_alt: float = 0.61803398874989
-
+E: float       = 2.71828182845905
+PI: float      = 3.14159265358979
+TAU: float     = 6.28318530717959
+PHI: float     = 1.61803398874989
+PSI: float     = 0.61803398874989
 
 class MathVector:
   def __init__(self, values: list):
@@ -25,7 +24,7 @@ class MathVector:
 
   def pop(self, index: int = -1):
     self.values.pop(index)
-  
+    
   def average(self): #Returns the average of every value
      average = self.sum() / len(self.values)
      return average
@@ -63,24 +62,25 @@ class MathVector:
         if i < min: min = i
     return min
 
-def fast_sqrt(num: int, precis: int = 5):
+
+def fast_sqrt(num: float, precis: int = 5, nthpow_of2: int = 1):
   near_sqr = None
   approx = None
+
+  if nthpow_of2 <= 0: return num
 
   for i in range(precis):
 
     if approx is None:  
-      for j in range(num):
+      for j in range(int(num)):
         near_sqr = j
-        if j * j > num:
-          break
+        if j * j > num: break
       approx = (num + near_sqr * near_sqr)/(2 * near_sqr)
 
     else:
       approx = (num + approx * approx)/(2 * approx)
 
-  return approx
-
+  return fast_sqrt(approx, 15, nthpow_of2 - 1)
 
 def bit_div(num: int, pow: int = 1, floating: bool = False):
   displace = pow - 1 
@@ -101,3 +101,54 @@ def bit_div(num: int, pow: int = 1, floating: bool = False):
     result = int(quot, 2)
     
   return result
+
+def fib(n: int):
+  fibonnaci = [0, 1]
+  while len(fibonnaci) - 1  < n:
+    fibonnaci.append(fibonnaci[-1] + fibonnaci[-2])
+
+  return fibonnaci[-1]
+
+def factorial(n: int):
+  factorials = [1]
+  while len(factorials) - 1 < n:
+    factorials.append(factorials[-1] * len(factorials))
+  return factorials[-1]
+
+def sin(x): # Bhaskara I’s approximation 
+    x = x % (TAU) 
+    sign = 1 
+    if x > PI: 
+        x -= PI 
+        sign = -1 
+    if x > PI/2: 
+        x = PI - x 
+
+    num = 16 * x * (PI - x) 
+    den = 5 * (PI ** 2) - 4 * x * (PI - x) 
+    return sign * num / den 
+
+def cos(x): # Bhaskara I’s approximation 
+    x = (PI/2 + x) % (TAU) 
+    sign = 1 
+    if x > PI: 
+        x -= PI 
+        sign = -1 
+    if x > PI/2: 
+        x = PI - x 
+
+    num = 16 * x * (PI - x) 
+    den = 5 * (PI ** 2) - 4 * x * (PI - x) 
+    return sign * num / den 
+
+def tan(x):   
+  return sin(x) / cos(x)
+
+def csc(x):   
+  return 1 / sin(x)
+
+def sec(x):   
+  return 1 / cos(x)
+
+def cot(x):   
+  return 1 / tan(x)
